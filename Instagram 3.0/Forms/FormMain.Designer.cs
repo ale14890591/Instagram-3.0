@@ -83,6 +83,7 @@
             this.listBoxFilters.Size = new System.Drawing.Size(204, 288);
             this.listBoxFilters.TabIndex = 3;
             this.listBoxFilters.DoubleClick += new System.EventHandler(this.ApplyFilter);
+            this.listBoxFilters.MouseHover += new System.EventHandler(this.DetermineHoveredItem);
             // 
             // FormMain
             // 

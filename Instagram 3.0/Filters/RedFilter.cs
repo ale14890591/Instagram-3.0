@@ -9,5 +9,6 @@ namespace Instagram_3._0.Filters
     internal class RedFilter : Filter
     {
         public static readonly string _name = "Red Filter";
+        public static readonly string _description = "Gives your foto red shade";
     }
 }

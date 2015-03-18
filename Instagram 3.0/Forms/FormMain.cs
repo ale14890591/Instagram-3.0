@@ -14,15 +14,16 @@ namespace Instagram_3._0
 {
     public partial class FormMain : Form
     {
-        Dictionary<string, Type> filterDictionary;
-        FormProgressBar formProgressBar;
+        private Dictionary<string, Type> _filterDictionary;
+        private FormProgressBar _formProgressBar;
+        private bool _filterApplying = false;
 
         public FormMain()
         {
             InitializeComponent();
             var filters = GetFilters();
             InitializeListBoxFilters(filters);
-            filterDictionary = GetFilterDictionary(filters);
+            _filterDictionary = GetFilterDictionary(filters);
         }
 
         private void LoadPicture(object sender, EventArgs e)
@@ -71,11 +72,19 @@ namespace Instagram_3._0
         {
             if (pictureBox.Image != null)
             {
-                Filter filter = (Filter)Activator.CreateInstance(filterDictionary[(sender as ListBox).SelectedItem as string]);
-                ShowApplyingProcess(filter);
-                filter.Completed += ShowApplyingProcessEndMessage;
+                if (!_filterApplying)
+                {
+                    _filterApplying = true;
+                    Filter filter = (Filter)Activator.CreateInstance(_filterDictionary[(sender as ListBox).SelectedItem as string]);
+                    ShowApplyingProcess(filter);
+                    filter.Completed += ShowApplyingProcessEndMessage;
 
-                Task taskProcessingImage = Task.Factory.StartNew(filter.ProcessImage);
+                    Task taskProcessingImage = Task.Factory.StartNew(filter.ProcessImage);
+                }
+                else
+                {
+                    MessageBox.Show("You cannot apply more than one filter at the same time");
+                }
             }
             else
             {
@@ -85,16 +94,15 @@ namespace Instagram_3._0
 
         private void ShowApplyingProcess(Filter filter)
         {
-            formProgressBar = new FormProgressBar();
-            filter.ProgressChanged += formProgressBar.SetProgressBar;
-            formProgressBar.SetButtonCancelClickEvent(new EventHandler(filter.Cancel));
-            formProgressBar.SetDisposedEvent(new FormClosingEventHandler(filter.Cancel));
-            formProgressBar.Show();
+            _formProgressBar = new FormProgressBar();
+            filter.ProgressChanged += _formProgressBar.SetProgressBar;
+            _formProgressBar.SetButtonCancelClickEvent(new EventHandler(filter.Cancel));
+            _formProgressBar.SetDisposedEvent(new FormClosingEventHandler(filter.Cancel));
+            _formProgressBar.Show();
         }
 
         private void ShowApplyingProcessEndMessage(bool cancelled)
         {
-            
             if (cancelled)
                 MessageBox.Show("Applying has been cancelled", "Cancelled");
             else
@@ -103,8 +111,23 @@ namespace Instagram_3._0
             Invoke(
                 new Action(
                     () =>
-                        formProgressBar.Close()
+                        _formProgressBar.Close()
             ));
+
+            _filterApplying = false;
+        }
+        
+        private void DetermineHoveredItem(object sender, EventArgs e)
+        {
+            Point cursorPosition = Cursor.Position;
+            int index = listBoxFilters.IndexFromPoint(listBoxFilters.PointToClient(cursorPosition));
+            if (index != -1)
+            {
+                Type filterType = _filterDictionary[listBoxFilters.Items[index] as string];
+                string filterDescription = filterType.GetField("_description").GetValue(null).ToString();
+                ToolTip t = new ToolTip();
+                t.Show(filterDescription, listBoxFilters, 2000);
+            }
         }
     }
 }
