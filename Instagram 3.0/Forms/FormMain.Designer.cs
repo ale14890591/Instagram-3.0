@@ -49,9 +49,10 @@
             // 
             // buttonLoadPicture
             // 
+            this.buttonLoadPicture.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonLoadPicture.Location = new System.Drawing.Point(12, 12);
             this.buttonLoadPicture.Name = "buttonLoadPicture";
-            this.buttonLoadPicture.Size = new System.Drawing.Size(94, 38);
+            this.buttonLoadPicture.Size = new System.Drawing.Size(94, 50);
             this.buttonLoadPicture.TabIndex = 1;
             this.buttonLoadPicture.Text = "Load Picture";
             this.buttonLoadPicture.UseVisualStyleBackColor = true;
@@ -59,9 +60,10 @@
             // 
             // buttonClearPictureBox
             // 
+            this.buttonClearPictureBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.buttonClearPictureBox.Location = new System.Drawing.Point(122, 12);
             this.buttonClearPictureBox.Name = "buttonClearPictureBox";
-            this.buttonClearPictureBox.Size = new System.Drawing.Size(94, 38);
+            this.buttonClearPictureBox.Size = new System.Drawing.Size(94, 50);
             this.buttonClearPictureBox.TabIndex = 2;
             this.buttonClearPictureBox.Text = "Clear Area";
             this.buttonClearPictureBox.UseVisualStyleBackColor = true;
@@ -73,11 +75,14 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxFilters.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.listBoxFilters.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listBoxFilters.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBoxFilters.FormattingEnabled = true;
-            this.listBoxFilters.Location = new System.Drawing.Point(12, 64);
+            this.listBoxFilters.ItemHeight = 24;
+            this.listBoxFilters.Location = new System.Drawing.Point(12, 88);
             this.listBoxFilters.Name = "listBoxFilters";
-            this.listBoxFilters.Size = new System.Drawing.Size(204, 312);
+            this.listBoxFilters.Size = new System.Drawing.Size(204, 288);
             this.listBoxFilters.TabIndex = 3;
+            this.listBoxFilters.DoubleClick += new System.EventHandler(this.ApplyFilter);
             // 
             // FormMain
             // 
@@ -91,6 +96,7 @@
             this.Controls.Add(this.pictureBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Instagram 3.0";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);

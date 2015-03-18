@@ -19,7 +19,30 @@ namespace Instagram_3._0
 
         public void SetProgressBar(int value)
         {
-            progressBar.Value = value;
+            try
+            {
+                Invoke(
+                    new Action(
+                        () =>
+                        {
+                            progressBar.Value = value < 100 ? value + 1 : value;//для мгновенного останова прогресс бара при отмене
+                            progressBar.Value = value;
+                        }
+                ));
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        }
+
+        public void SetButtonCancelClickEvent(EventHandler action)
+        {
+            buttonCancel.Click += action;
+        }
+
+        public void SetDisposedEvent(FormClosingEventHandler action)
+        {
+            this.FormClosing += action;
         }
     }
 }
