@@ -83,7 +83,7 @@
             this.listBoxFilters.Size = new System.Drawing.Size(204, 288);
             this.listBoxFilters.TabIndex = 3;
             this.listBoxFilters.DoubleClick += new System.EventHandler(this.ApplyFilter);
-            this.listBoxFilters.MouseHover += new System.EventHandler(this.DetermineHoveredItem);
+            this.listBoxFilters.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ShowToolTipForHoveredItem);
             // 
             // FormMain
             // 
@@ -99,6 +99,7 @@
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Instagram 3.0";
+            this.SizeChanged += new System.EventHandler(this.ChangeImageSizeOnFormSizeChanging);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 

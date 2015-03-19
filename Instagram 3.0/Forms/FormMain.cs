@@ -17,6 +17,7 @@ namespace Instagram_3._0
         private Dictionary<string, Type> _filterDictionary;
         private FormProgressBar _formProgressBar;
         private bool _filterApplying = false;
+        private Image _image;
 
         public FormMain()
         {
@@ -32,10 +33,15 @@ namespace Instagram_3._0
             openDialog.Filter = "Image Files(*.JPG;*.JPEG;*.PNG)|*.JPG;*.JPEG;*.PNG|All files (*.*)|*.*";
             if (openDialog.ShowDialog() == DialogResult.OK)
             {
-                Image i = Image.FromFile(openDialog.FileName);
-                Bitmap b = new Bitmap(i, (int)(pictureBox.Width), (int)(i.Height * pictureBox.Width / i.Width));
-                pictureBox.Image = b;
+                _image = Image.FromFile(openDialog.FileName);
+                SetPictureSize(_image);
             }
+        }
+
+        private void SetPictureSize(Image i)
+        {
+            Bitmap b = new Bitmap(i, (int)(pictureBox.Width), (int)(i.Height * pictureBox.Width / i.Width));
+            pictureBox.Image = b;
         }
 
         private void ClearPictureBox(object sender, EventArgs e)
@@ -126,8 +132,38 @@ namespace Instagram_3._0
                 Type filterType = _filterDictionary[listBoxFilters.Items[index] as string];
                 string filterDescription = filterType.GetField("_description").GetValue(null).ToString();
                 ToolTip t = new ToolTip();
-                t.Show(filterDescription, listBoxFilters, 2000);
+                t.Show(filterDescription, listBoxFilters);
             }
+        }
+
+        private Point _point;
+        private void ShowToolTipForHoveredItem(object sender, MouseEventArgs e)
+        {
+            if (_point != e.Location)
+            {
+                _point = e.Location;
+                int index = listBoxFilters.IndexFromPoint(_point);
+                if (index != -1)
+                {
+                    Type filterType = _filterDictionary[listBoxFilters.Items[index] as string];
+                    string filterDescription = filterType.GetField("_description").GetValue(null).ToString();
+                    ToolTip tp = new ToolTip();
+                    tp.Show(filterDescription, listBoxFilters, _point.X + 10, _point.Y + 10, 2000);
+
+                    Thread t = new Thread(new ThreadStart(() =>
+                    {
+                        listBoxFilters.MouseMove -= ShowToolTipForHoveredItem;
+                        Thread.Sleep(2000);
+                        listBoxFilters.MouseMove += ShowToolTipForHoveredItem;
+                    }));
+                    t.Start();
+                }
+            }
+        }
+
+        private void ChangeImageSizeOnFormSizeChanging(object sender, EventArgs e)
+        {
+            SetPictureSize(_image);
         }
     }
 }
